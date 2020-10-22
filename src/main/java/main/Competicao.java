@@ -15,6 +15,7 @@ public class Competicao implements  Runnable {
     private Equipe[] equipes;
     private Map<Equipe, Integer> jogosPorEquipe;
 
+    private Semaphore equipesProntas = new Semaphore(0);
     private Semaphore comecar = new Semaphore(0);
     private Semaphore finalizar = new Semaphore(0);
 
@@ -38,8 +39,9 @@ public class Competicao implements  Runnable {
     public void run() {
         for (Equipe equipe : equipes)
             equipe.start();
-        iniciarCompeticao();
         try {
+            equipesProntas.acquire(TOTAL_EQUIPES);
+            iniciarCompeticao();
             for (Equipe equipe : equipes)
                 equipe.join();
         } catch (InterruptedException e) {
@@ -74,6 +76,11 @@ public class Competicao implements  Runnable {
     private void finalizarCompeticao() {
         finalizada = true;
         finalizar.release(TOTAL_EQUIPES);
+    }
+
+    public void reportarEquipePronta(Equipe e) {
+        if (jogosPorEquipe.containsKey(e))
+            equipesProntas.release();
     }
 
     public void reportarJogoFinalizado(Equipe e) {

@@ -31,6 +31,7 @@ public class Equipe extends Thread {
             }
         }
         private void loop() throws InterruptedException {
+            reportarEquipePronta();
             competicao.esperarInicio();
             for (int c = 0; !competicao.isFinalizada() && c < competicao.JOGOS_POR_EQUIPE; c++) {
                 System.out.printf("Designer da equipe %d preparando GDD #%d\n", id, c + 1);
@@ -90,5 +91,9 @@ public class Equipe extends Thread {
     private void entregarJogo() {
         filaGddsLimite.release();
         competicao.reportarJogoFinalizado(this);
+    }
+
+    private void reportarEquipePronta() {
+        competicao.reportarEquipePronta(this);
     }
 }
