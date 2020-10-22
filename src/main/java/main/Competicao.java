@@ -72,6 +72,7 @@ public class Competicao implements  Runnable {
     }
 
     private void finalizarCompeticao() {
+        finalizada = true;
         finalizar.release(TOTAL_EQUIPES);
     }
 
@@ -86,7 +87,6 @@ public class Competicao implements  Runnable {
         jogosPorEquipe.put(e, jogosFinalizados);
         System.out.printf("Competicao: Equipe %d finalizou %d jogos\n", e.getIdEquipe(), jogosFinalizados);
         if (jogosFinalizados == JOGOS_POR_EQUIPE) {
-            finalizada = true;
             finalizarCompeticao();
         }
         equipeFinalizouJogo.unlock();
